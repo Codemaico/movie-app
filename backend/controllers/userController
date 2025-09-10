@@ -1,0 +1,45 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const asyncHandler = require("express-async-handler");
+const User = require("../models/usersModel");
+
+// @desc Register new user
+// @route POST /users
+// @access Public
+
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    res.status(400);
+    throw new error("Please add all fields");
+  }
+
+  res.json({ message: "Register User" });
+});
+
+// @desc  Authenticate a user
+// @route POST /login
+// @access Public
+
+const loginUser = asyncHandler(async (req, res) => {
+  res.json({ message: "Login User" });
+});
+
+// @desc  Get user data
+// @route POST /users/me
+// @access Public
+
+const getMe = asyncHandler(async (req, res) => {
+  res.json({ message: "Got you." });
+});
+
+// const getallUsers = (req, res) => {
+//     res.json({message: 'All users'})
+// }
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getMe,
+};
