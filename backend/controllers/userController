@@ -12,10 +12,45 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!name || !email || !password) {
     res.status(400);
-    throw new error("Please add all fields");
+    throw new Error("Please add all fields");
   }
 
-  res.json({ message: "Register User" });
+  // Check if user exists
+
+  const userExists = await User.findOne({email})
+
+  if(userExists) {
+    res.status(400);
+    throw new Error('User already exits')
+  }
+
+  // Hash password
+
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt) 
+
+  // Create user
+
+  const user = await User.create({
+    name,
+    email,
+    password : hashedPassword
+  })
+
+  if(user) {
+    res.status(201).json({
+      _id: user.id,
+      name: user.name,
+      email: user.email
+    })
+  } else {
+    res.status(400)
+    throw new Error('Invalid user data')
+  }
+
+
+
+  
 });
 
 // @desc  Authenticate a user
@@ -23,7 +58,21 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access Public
 
 const loginUser = asyncHandler(async (req, res) => {
-  res.json({ message: "Login User" });
+  const {email, password} = req.body
+
+  // Check back for user email
+  const user = await User.findOne({email})
+
+  if(user && (await bcrypt.compare(password, user.password))) {
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email
+    })
+  } else {
+    res.status(400)
+    throw new Error('Invalid credentials')
+  }
 });
 
 // @desc  Get user data
@@ -34,12 +83,16 @@ const getMe = asyncHandler(async (req, res) => {
   res.json({ message: "Got you." });
 });
 
-// const getallUsers = (req, res) => {
-//     res.json({message: 'All users'})
-// }
+
+const getallUsers = asyncHandler(async(req, res) => {
+  
+
+  const users = await User.find({}).select("-password"); 
+    res.json(users)
+})
 
 module.exports = {
   registerUser,
   loginUser,
-  getMe,
+  getMe,getallUsers
 };
