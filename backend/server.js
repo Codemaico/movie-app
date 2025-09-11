@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
+import favoriteRoutes from "./routes/favoriteRoutes.js"
 
 dotenv.config();
 const app = express();
@@ -19,7 +20,8 @@ mongoose
 
 // routes
 
-app.use("/users", userRoutes); /// Use one clean prefix
+app.use("/users", userRoutes);
+app.use("/favorites", favoriteRoutes) /// Use one clean prefix
 
 // app.use('/login', userRoutes);
 
