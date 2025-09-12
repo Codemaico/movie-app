@@ -1,10 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-const { } = require('../controllers/favoriteController')
+const { addFavorite} = require('../controllers/favoriteController');
+const { protect } = require('../middleware/authMiddleware');
 
 
-router.post("/")
+router.get("/myfav", protect, addFavorite);
+router.post("/", protect, addFavorite);
 
 
 module.exports = router;

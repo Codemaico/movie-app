@@ -1,11 +1,11 @@
-import asyncHandler from "express-async-handler";
-import Favorite from "../models/favoriesModel.js";
+const asyncHandler = require("express-async-handler");
+const Favorite = require('../models/favoritesModel.js');
 
 // @desc    Add a movie to favorites
 // @route   POST /api/favorites
 // @access  Private
 
-export const addFavorite = asyncHandler(async(req, res) => {
+const addFavorite = asyncHandler(async(req, res) => {
     const { movieId, title, posterPath, overview } = req.body;
 
    const favoriteExists = await Favorite.findOne({ user: req.user.id, movieId });
@@ -14,3 +14,5 @@ export const addFavorite = asyncHandler(async(req, res) => {
     throw new Error("Movie already in favorites");
   }
 })
+
+module.exports = {  addFavorite };

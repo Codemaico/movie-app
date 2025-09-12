@@ -1,9 +1,10 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
-import userRoutes from "./routes/userRoutes.js";
-import favoriteRoutes from "./routes/favoriteRoutes.js"
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const userRoutes = require("./routes/userRoutes.js");
+const favoriteRoutes = require("./routes/favoriteRoutes.js")
+
 
 dotenv.config();
 const app = express();
