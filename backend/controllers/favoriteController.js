@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Favorite = require('../models/favoritesModel.js');
+const User = require('../models/usersModel.js');
 
 // @desc    Add a movie to favorites
 // @route   POST /api/favorites
@@ -8,7 +9,7 @@ const Favorite = require('../models/favoritesModel.js');
 const addFavorite = asyncHandler(async(req, res) => {
     const { movieId, title, posterPath, overview } = req.body;
 
-   const favoriteExists = await Favorite.findOne({ user: req.user.id, movieId });
+   const favoriteExists = await Favorite.findOne({ userId: req.user.id, movieId });
   if (favoriteExists) {
     res.status(400);
     throw new Error("Movie already in favorites");
@@ -19,7 +20,7 @@ const addFavorite = asyncHandler(async(req, res) => {
   }
 
   const favorite = await Favorite.create({
-    user: req.user.id,
+    userId: req.user.id,
     movieId,
     title,
     posterPath,
@@ -34,4 +35,21 @@ const getFavorite = asyncHandler(async(req, res) => {
     res.status(200).json(favorites);
 });
 
-module.exports = {  addFavorite, getFavorite };
+
+const removeFavorite = asyncHandler(async(req, res) => {
+    const favorite = await Favorite.findById(req.params.id);
+    if (!favorite) {
+        res.status(404);
+        throw new Error("Favorite not found");
+    }
+    if (favorite.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error("Not authorized");
+    }
+    await favorite.remove();
+    res.status(204).send();
+});
+
+
+
+module.exports = {  addFavorite, getFavorite, removeFavorite };
