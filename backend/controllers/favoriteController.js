@@ -13,6 +13,25 @@ const addFavorite = asyncHandler(async(req, res) => {
     res.status(400);
     throw new Error("Movie already in favorites");
   }
-})
+    if (!movieId || !title) {
+    res.status(400);
+    throw new Error("Please provide all required fields");
+  }
 
-module.exports = {  addFavorite };
+  const favorite = await Favorite.create({
+    user: req.user.id,
+    movieId,
+    title,
+    posterPath,
+    overview
+  });
+
+  res.status(201).json(favorite);
+});
+
+const getFavorite = asyncHandler(async(req, res) => {
+    const favorites = await Favorite.find({ userId: req.user.id });
+    res.status(200).json(favorites);
+});
+
+module.exports = {  addFavorite, getFavorite };
