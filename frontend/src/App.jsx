@@ -13,6 +13,7 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/movie-app" element={<Home />} />
           <Route path="/favorites" element={<Favorites />} />
         </Routes>
       </main>
