@@ -11,9 +11,16 @@ function Register() {
 
   const { name, email, password, password2 } = formData;
 
-  function onChange(e) {
-   
-  }
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <>
@@ -23,7 +30,7 @@ function Register() {
       </section>
 
       <section className="form">
-        <form>
+        <form on onSubmit={onSubmit}>
           <div className="form-group">
             <input
               type="text"
@@ -69,7 +76,9 @@ function Register() {
             />
           </div>
           <div className="form-group">
-            <button type="submit" className="btn btn-block">Submit</button>
+            <button type="submit" className="btn btn-block">
+              Submit
+            </button>
           </div>
         </form>
       </section>
