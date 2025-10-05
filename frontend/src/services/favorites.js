@@ -1,4 +1,4 @@
-const API_URL = "mongodb://127.0.0.1:27017/moviedb/favorites"; // adjust when you deploy
+const API_URL = "http://localhost:5000/moviedb/"; // adjust when you deploy
 
 export async function fetchFavorites(token) {
   const res = await fetch(API_URL, {

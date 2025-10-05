@@ -1,9 +1,10 @@
 import "../css/favorites.css";
 import { MovieContext } from "../context/MovieContext";
 import MovieCard from "../components/MovieCard";
+import { useContext } from "react";
 
 function Favorites() {
-  const { favorites } = MovieContext();
+  const { favorites } = useContext(MovieContext);
   if (favorites.length > 0) {
   return (
     <div className="favorites">
@@ -12,7 +13,7 @@ function Favorites() {
       <div className="movies-grid">
         {favorites.map((movie) => (
   <MovieCard
-     movie={{ ...movie, id: movie.movieId }}   // ensure `id` exists
+     movie={{ ...movie, id: movie.movieId || movie._id }}   // ensure `id` exists
      key={movie.movieId}
   />
 ))}
