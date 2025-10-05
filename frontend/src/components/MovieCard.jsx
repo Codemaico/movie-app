@@ -1,8 +1,9 @@
 import "../css/moviecard.css";
+import { useContext } from 'react';
 import { MovieContext } from "../context/MovieContext";
 
 function MovieCard({ movie }) {
-  const { addToFavorites, removeFromFavorites, isFavorite } = MovieContext();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useContext(MovieContext);
   const favorite = isFavorite(movie.id);
 
   const toggleFavorite = (e) => {
