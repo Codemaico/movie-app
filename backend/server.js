@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes.js");
-const favoriteRoutes = require("./routes/favoriteRoutes.js")
-
+const favoriteRoutes = require("./routes/favoriteRoutes.js");
 
 dotenv.config();
 const app = express();
@@ -22,7 +21,7 @@ mongoose
 // routes
 
 app.use("/users", userRoutes);
-app.use("/favorites", favoriteRoutes) /// Use one clean prefix
+app.use("/favorites", favoriteRoutes); /// Use one clean prefix
 
 // app.use('/login', userRoutes);
 

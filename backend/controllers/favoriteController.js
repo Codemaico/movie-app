@@ -1,55 +1,63 @@
-const asyncHandler = require("express-async-handler");
-const Favorite = require('../models/favoritesModel.js');
-const User = require('../models/usersModel.js');
+const Favorite = require("../models/favoritesModel");
 
-// @desc    Add a movie to favorites
+// @desc    Get all favorites for logged-in user
+// @route   GET /api/favorites
+// @access  Private
+const getFavorites = async (req, res) => {
+  try {
+    const favorites = await Favorite.find({ user: req.user.id });
+    res.json(favorites);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch favorites" });
+  }
+};
+
+// @desc    Add new favorite
 // @route   POST /api/favorites
 // @access  Private
+const addFavorite = async (req, res) => {
+  const { movieId, title, posterPath, overview } = req.body;
 
-const addFavorite = asyncHandler(async(req, res) => {
-    const { movieId, title, posterPath, overview } = req.body;
-
-   const favoriteExists = await Favorite.findOne({ userId: req.user.id, movieId });
-  if (favoriteExists) {
-    res.status(400);
-    throw new Error("Movie already in favorites");
-  }
-    if (!movieId || !title) {
-    res.status(400);
-    throw new Error("Please provide all required fields");
+  if (!movieId || !title) {
+    return res.status(400).json({ message: "Missing movie details" });
   }
 
-  const favorite = await Favorite.create({
-    userId: req.user.id,
-    movieId,
-    title,
-    posterPath,
-    overview
-  });
+  try {
+    const existing = await Favorite.findOne({ movieId, user: req.user.id });
+    if (existing)
+      return res.status(400).json({ message: "Already in favorites" });
 
-  res.status(201).json(favorite);
-});
+    const favorite = await Favorite.create({
+      user: req.user.id,
+      movieId,
+      title,
+      posterPath,
+      overview,
+    });
 
-const getFavorite = asyncHandler(async(req, res) => {
-    const favorites = await Favorite.find({ userId: req.user.id });
-    res.status(200).json(favorites);
-});
+    res.status(201).json(favorite);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add favorite" });
+  }
+};
 
+// @desc    Remove a favorite by ID
+// @route   DELETE /api/favorites/:id
+// @access  Private
+const removeFavorite = async (req, res) => {
+  try {
+    const favorite = await Favorite.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id,
+    });
 
-const removeFavorite = asyncHandler(async(req, res) => {
-    const favorite = await Favorite.findById(req.params.id);
-    if (!favorite) {
-        res.status(404);
-        throw new Error("Favorite not found");
-    }
-    if (favorite.user.toString() !== req.user.id) {
-        res.status(401);
-        throw new Error("Not authorized");
-    }
-    await favorite.remove();
-    res.status(204).send();
-});
+    if (!favorite)
+      return res.status(404).json({ message: "Favorite not found" });
 
+    res.json({ message: "Favorite removed", id: req.params.id });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to remove favorite" });
+  }
+};
 
-
-module.exports = {  addFavorite, getFavorite, removeFavorite };
+module.exports = { getFavorites, addFavorite, removeFavorite };
