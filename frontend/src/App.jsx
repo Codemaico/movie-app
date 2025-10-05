@@ -3,30 +3,38 @@ import MovieCard from "./components/MovieCard";
 import NavBar from "./components/NavBar";
 import Favorites from "./pages/favorites";
 import Home from "./pages/home";
-import { Route, Routes , BrowserRouter} from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { MovieProvider } from "./context/MovieContext";
-import Dashboard from "./pages/dashboard";    
+import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import './index.css';
+import "./index.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+import { UserProvider } from "./context/userContext";
 
 function App() {
   return (
-    <MovieProvider>
-      <NavBar />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/movie-app" element={<Home />} />
-          <Route path="/movie-app/favorites" element={<Favorites />} />
-          <Route path="/movie-app/dashboard" element={<Dashboard />} />
-          <Route path="/movie-app/login" element={<Login />} />
-          <Route path="/movie-app/register" element={<Register />} />
-        </Routes>
-      </main>
-    </MovieProvider>
+    <UserProvider>
+      <MovieProvider>
+        <ToastContainer />
+        <NavBar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movie-app" element={<Home />} />
+            <Route path="/movie-app/favorites" element={<Favorites />} />
+            <Route path="/movie-app/dashboard" element={<Dashboard />} />
+            <Route path="/movie-app/login" element={<Login />} />
+            <Route path="/movie-app/register" element={<Register />} />
+          </Routes>
+        </main>
+      </MovieProvider>
+    </UserProvider>
   );
 }
 
 export default App;
+
+

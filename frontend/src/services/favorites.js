@@ -1,7 +1,7 @@
-const API_URL = "http://localhost:5000/moviedb/"; // adjust when you deploy
+const API_URI = "/favorites/"; // adjust when you deploy
 
 export async function fetchFavorites(token) {
-  const res = await fetch(API_URL, {
+  const res = await fetch(API_URI, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to load favorites");
@@ -9,11 +9,11 @@ export async function fetchFavorites(token) {
 }
 
 export async function addFavorite(movie, token) {
-  const res = await fetch(API_URL, {
+  const res = await fetch(API_URI, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      "Authorization": `Bearer ${token}`,
     },
     body: JSON.stringify({
       movieId: movie.id,
@@ -27,7 +27,7 @@ export async function addFavorite(movie, token) {
 }
 
 export async function removeFavorite(movieId, token) {
-  const res = await fetch(`${API_URL}/${movieId}`, {
+  const res = await fetch(`${API_URI}/${movieId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
