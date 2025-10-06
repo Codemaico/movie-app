@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
-import {useNavigate} from "react-router-dom"
-import {toast} from "react-toastify"
-import authService from "../services/authService";
-import { userContext } from "../context/userContext";
+
+import { toast } from "react-toastify";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -15,17 +13,11 @@ function Register() {
 
   const { name, email, password, password2 } = formData;
 
-  const navigate = useNavigate();
-  const {registerUser} = authService;
-
   useEffect(() => {
     if (password !== password2) {
       toast.error("Passwords do not match");
     }
   }, [password, password2]);
-  
-
-  
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -37,8 +29,6 @@ function Register() {
   const onSubmit = (e) => {
     e.preventDefault();
   };
-
-  
 
   return (
     <>
