@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -13,8 +14,12 @@ function Register() {
 
   const { name, email, password, password2 } = formData;
 
+  const navigate = useNavigate();
+
+
+
   useEffect(() => {
-    if (password !== password2) {
+    if (password !== password2  && password2 !== "") {
       toast.error("Passwords do not match");
     }
   }, [password, password2]);
@@ -26,8 +31,28 @@ function Register() {
     }));
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    if (password !== password2) {
+      return toast.error("Passwords do not match");
+    } else {
+      const userData = { name, email, password };
+      console.log(userData);
+      // Here you would typically send userData to your backend API
+      const response = await fetch("/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      if (response.ok) {
+        toast.success("Registration successful");
+        navigate("/movie-app/login");
+      } else {
+        toast.error("Registration failed");
+      }
+    }
   };
 
   return (
