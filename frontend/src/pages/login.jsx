@@ -20,6 +20,10 @@ function Login() {
     e.preventDefault();
   };
 
+ useEffect(() => {
+
+ },[]);
+
   return (
     <>
       <section className="heading">
