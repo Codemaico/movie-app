@@ -34,7 +34,7 @@ function Login() {
     console.log(userData);
 
     try {
-      const response = await fetch("",{
+      const response = await fetch("/users",{
         method: "GET",
         headers: {
           "Content-Type": "application/json",
