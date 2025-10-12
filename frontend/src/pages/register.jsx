@@ -69,7 +69,7 @@ function Register() {
         toast.success("Registration successful");
 
         // 4. Navigate to the desired page
-        navigate("/movie-app");
+        navigate("/movie-app/login");
       } else {
         toast.error("Registration successful, but no token received.");
         navigate("/movie-app/login");

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaSignInAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -16,13 +17,42 @@ function Login() {
     }));
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+
+    // Add your login logic here, such as making an API call to authenticate the user
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    const userData = { email, password };
+    console.log(userData);
+
+    try {
+      const response = await fetch("",{
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+
+      if(!response) {
+        const errorData = await response.json();
+        return toast.error(errorData.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Network error:",  error)
+    }
   };
 
- useEffect(() => {
+  useEffect(() => {
 
- },[]);
+  }, []);
 
   return (
     <>
