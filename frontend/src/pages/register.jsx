@@ -83,7 +83,7 @@ function Register() {
   // Optional: Handle pre-existing user login state in a separate useEffect
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      navigate("/movie-app");
+      navigate("/movie-app/");
     }
   }, [navigate]);
 

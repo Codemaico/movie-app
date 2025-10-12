@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ function Login() {
   });
 
   const { email, password } = formData;
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -20,39 +22,59 @@ function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Add your login logic here, such as making an API call to authenticate the user
+    // 1. Validation checks
     if (!email || !password) {
       toast.error("Please fill in all fields");
       return;
     }
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
+    // Your backend handles password length validation, so you can remove this client-side check if you want.
+    // if (password.length < 6) {
+    //   toast.error("Password must be at least 6 characters");
+    //   return;
+    // }
 
     const userData = { email, password };
-    console.log(userData);
 
     try {
-      const response = await fetch("/users",{
-        method: "GET",
+      // 2. Correct fetch call for login endpoint
+      const response = await fetch("/users/login", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-        }
+        },
+        // 3. Send the user credentials in the body
+        body: JSON.stringify(userData),
       });
 
-      if(!response) {
+      // 4. Handle failed login attempts first
+      if (!response.ok) {
         const errorData = await response.json();
-        return toast.error(errorData.message || "Login failed");
+        return toast.error(errorData.message || "Invalid credentials");
+      }
+      
+      // 5. Read the successful response
+      const data = await response.json();
+      
+      // 6. Check for a token and save user to local storage
+      if (data.token) {
+        localStorage.setItem("user", JSON.stringify(data));
+        toast.success("Login successful");
+        navigate("/movie-app");
+      } else {
+        toast.error("Login successful, but no token received.");
       }
     } catch (error) {
-      console.error("Network error:",  error)
+      console.error("Network error:", error);
+      toast.error("Network error. Please try again.");
     }
   };
 
+  // Optional: Redirect if user is already logged in
   useEffect(() => {
-
-  }, []);
+    if (localStorage.getItem("user")) {
+      navigate("/movie-app");
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -65,7 +87,7 @@ function Login() {
         <form onSubmit={onSubmit}>
           <div className="form-group">
             <input
-              type="text"
+              type="email" // Use email type for better validation
               className="form-control"
               id="email"
               name="email"
@@ -76,7 +98,7 @@ function Login() {
           </div>
           <div className="form-group">
             <input
-              type="text"
+              type="password" // Use password type to hide input
               className="form-control"
               id="password"
               name="password"
