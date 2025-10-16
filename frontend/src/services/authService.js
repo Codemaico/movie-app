@@ -30,9 +30,15 @@ export async function registerUser(userData) {
   return data;
 }
 
+export function logOut() {
+  // Remove the user from localStorage
+  localStorage.removeItem("user");
+}
+
 const authService = {
   registerUser,
-  fetchUsers,
+  logOut,
+  fetchUsers
 };
 
 export default authService;
