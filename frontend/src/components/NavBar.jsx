@@ -40,9 +40,9 @@ function NavBar() {
         <ul>
           {user ? ( // Conditionally render links based on user state
             <li>
-              <button className="nav-link" onClick={handleLogout}>
+              <Link className="nav-link" onClick={handleLogout}>
                 <FaSignOutAlt /> Logout
-              </button>
+              </Link>
             </li>
           ) : (
             <>
