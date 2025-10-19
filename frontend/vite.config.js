@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/movie-app/',
   server: {
     proxy: {
-      '/users/register': {
+      '/users/': {
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,

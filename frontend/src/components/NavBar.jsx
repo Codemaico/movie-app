@@ -18,7 +18,7 @@ function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/movie-app" className="navbar-brands">
+        <Link to="/movie-app/home" className="navbar-brands">
           MICMovie
         </Link>
       </div>
@@ -27,7 +27,7 @@ function NavBar() {
         <ul>
           {currentUser ? ( // Check for currentUser from the context
             <li>
-              <Link to="/movie-app" className="nav-link" onClick={handleLogout}>
+              <Link to="/movie-app/login" className="nav-link" onClick={handleLogout}>
                 <FaSignOutAlt /> Logout
               </Link>
             </li>

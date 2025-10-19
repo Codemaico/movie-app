@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FaSignInAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ function Login() {
 
   const { email, password } = formData;
   const navigate = useNavigate();
+  const { loginUser } = useContext(UserContext);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -58,8 +60,10 @@ function Login() {
       // 6. Check for a token and save user to local storage
       if (data.token) {
         localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("token", data.token);
+        loginUser(data.token); // Update context immediately
         toast.success("Login successful");
-        navigate("/movie-app");
+        navigate("/movie-app/");
       } else {
         toast.error("Login successful, but no token received.");
       }
@@ -72,7 +76,7 @@ function Login() {
   // Optional: Redirect if user is already logged in
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      navigate("/movie-app");
+      navigate("/movie-app/home");
     }
   }, [navigate]);
 
