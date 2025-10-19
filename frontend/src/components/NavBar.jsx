@@ -1,46 +1,33 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react"; // Import useContext
+import { UserContext } from "../context/userContext"; // Import your context
 import "../css/navbar.css";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { logOut } from "../services/authService"; // This will need to be implemented
-import { useEffect, useState } from "react";
-import React from "react";
 import { toast } from "react-toastify";
 
 function NavBar() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null); // Use a state to track user login status
-
-  useEffect(() => {
-    // Check localStorage for user data or token
-    const token = localStorage.getItem("token"); // Assuming you store the token in localStorage
-    if (token) {
-      // You could also fetch user data here if needed
-      setUser({ token }); 
-    } else {
-      setUser(null);
-    }
-  }, []); // The empty array ensures this runs only once on component mount
+  const { currentUser, logoutUser } = useContext(UserContext); // Consume the context
 
   const handleLogout = () => {
-    logOut(); // Call your authService logout function
-    setUser(null); // Clear the user state
-    navigate("/login"); // Redirect to the login page
+    logoutUser(); // Call the logout function from context
+    navigate("/movie-app/login");
     toast.success("Logged out successfully");
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/" className="navbar-brands">
+        <Link to="/movie-app" className="navbar-brands">
           MICMovie
         </Link>
       </div>
 
       <div className="navbar-links">
         <ul>
-          {user ? ( // Conditionally render links based on user state
+          {currentUser ? ( // Check for currentUser from the context
             <li>
-              <Link className="nav-link" onClick={handleLogout}>
+              <Link to="/movie-app" className="nav-link" onClick={handleLogout}>
                 <FaSignOutAlt /> Logout
               </Link>
             </li>

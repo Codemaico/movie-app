@@ -1,12 +1,12 @@
 import "../css/moviecard.css";
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { MovieContext } from "../context/MovieContext";
-import { userContext } from "../context/userContext";
+import {  UserContext } from "../context/userContext";
 import { toast } from "react-toastify";
 
 function MovieCard({ movie }) {
   const { addToFavorites, removeFromFavorites, isFavorite } = useContext(MovieContext);
-  const {users} = useContext(userContext);
+  const {currentUser} = useContext(UserContext);
 
   // useEffect(() => {
   //   if (users.length === 0) {
@@ -19,7 +19,7 @@ function MovieCard({ movie }) {
   const toggleFavorite = (e) => {
   e.preventDefault();
   console.log("Heart clicked", movie.id); // <-- add this
-  if (users.length === 0) {
+  if (!currentUser) {
     return toast.error("Please login to manage favorites.");
   }
   favorite ? removeFromFavorites(movie.id) : addToFavorites(movie);
