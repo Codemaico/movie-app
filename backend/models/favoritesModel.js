@@ -15,4 +15,7 @@ const favoritesSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+// Add this line to create a unique compound index
+favoritesSchema.index({ user: 1, movieId: 1 }, { unique: true });
+
 module.exports = mongoose.model("Favorites", favoritesSchema);

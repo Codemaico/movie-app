@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react"; // Import useContext
 import { UserContext } from "../context/userContext"; // Import your context
 import "../css/navbar.css";
-import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaStar } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 function NavBar() {
@@ -26,11 +26,18 @@ function NavBar() {
       <div className="navbar-links">
         <ul>
           {currentUser ? ( // Check for currentUser from the context
+            <>
             <li>
               <Link to="/movie-app/login" className="nav-link" onClick={handleLogout}>
                 <FaSignOutAlt /> Logout
               </Link>
             </li>
+            <li>
+              <Link to="/movie-app/favorites" className="nav-link" >
+                <FaStar /> Favorite
+              </Link>
+            </li>
+            </>
           ) : (
             <>
               <li>

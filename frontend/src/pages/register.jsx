@@ -65,7 +65,7 @@ function Register() {
       // 2. Check if the response contains a token
       if (data.token) {
         // 3. Save the user object, including the token, to local storage
-        localStorage.setItem("user", JSON.stringify(data));
+        // localStorage.setItem("user", JSON.stringify(data));
         toast.success("Registration successful");
 
         // 4. Navigate to the desired page

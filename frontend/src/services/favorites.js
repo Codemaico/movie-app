@@ -1,7 +1,7 @@
 const API_URI = "/favorites/"; // adjust when you deploy
 
-export async function fetchFavorites(token) {
-  const res = await fetch(API_URI, {
+export async function fetchFavoriteByUser(userId, token) {
+  const res = await fetch(`${API_URI}${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to load favorites");
@@ -22,15 +22,23 @@ export async function addFavorite(movie, token) {
       overview: movie.overview,
     }),
   });
-  if (!res.ok) throw new Error("Failed to add favorite");
+  if (!res.ok) throw new Error("Failed to add favorites");
   return res.json();
 }
 
 export async function removeFavorite(movieId, token) {
-  const res = await fetch(`${API_URI}/${movieId}`, {
+  const res = await fetch(`${API_URI}${movieId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (!res.ok) throw new Error("Failed to remove favorite");
+  if (!res.ok) throw new Error("Failed to remove favorites");
   return res.json();
 }
+
+const favoritesService = {
+  fetchFavoriteByUser,
+  addFavorite,
+  removeFavorite
+};
+
+export default favoritesService;

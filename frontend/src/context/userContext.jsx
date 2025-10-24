@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import { registerUser, fetchUsers, logOut } from "../services/authService"; // Import logOut
+import { registerUser, fetchUsers, logOut } from "../services/authService"; 
+import { jwtDecode } from "jwt-decode"; // Import logOut
 
 // Use a descriptive name for your context
 // eslint-disable-next-line react-refresh/only-export-components
@@ -13,7 +14,8 @@ export const UserProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (token) {
       // Set the user based on the token
-      setCurrentUser({ token });
+      const decodedToken = jwtDecode(token);
+      setCurrentUser({ id: decodedToken.id, token });
       fetchUsers(token)
         .then(setUsers)
         .catch((err) => console.error("Failed to load users:", err));
@@ -22,7 +24,8 @@ export const UserProvider = ({ children }) => {
 
   const loginUser = (token) => {
     localStorage.setItem("token", token);
-    setCurrentUser({ token });
+    const decodedToken = jwtDecode(token); // Decode the token again on login
+    setCurrentUser({ id: decodedToken.id, token }); // Set both id and token
   };
 
   const logoutUser = () => {

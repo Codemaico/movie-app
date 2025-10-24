@@ -1,37 +1,59 @@
-import { createContext, useState, useEffect } from "react";
-import { fetchFavorites, addFavorite, removeFavorite } from "../services/favorites";
+// MovieContext.jsx
+import { createContext, useState, useEffect, useContext } from "react";
+import { fetchFavoriteByUser, addFavorite, removeFavorite } from "../services/favorites";
+import { UserContext } from "./userContext";
+import { toast } from "react-toastify";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const MovieContext = createContext();
 
 export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
-  const token = localStorage.getItem("token"); // the JWT you store after login
+  const { currentUser } = useContext(UserContext);
 
-  // Load favorites for the logged-in user
   useEffect(() => {
-    if (!token) return; // skip if not logged in
-    fetchFavorites(token)
-      .then(setFavorites)
-      .catch((err) => console.error("Failed to load favorites:", err));
-  }, [token]);
+    const getFavorites = async () => {
+      if (currentUser && currentUser.id && currentUser.token) {
+        try {
+          const userFavorites = await fetchFavoriteByUser(currentUser.id, currentUser.token);
+          setFavorites(userFavorites);
+        } catch (err) {
+          console.error("Error fetching favorites:", err);
+          toast.error("Failed to load your favorites.");
+        }
+      } else {
+        setFavorites([]);
+      }
+    };
+    getFavorites();
+  }, [currentUser]);
 
-  // add to favorites in DB
   const addToFavorites = async (movie) => {
-    if (!token) return;
-    const newFav = await addFavorite(movie, token);
-    setFavorites((prev) => [...prev, newFav]);
+    try {
+      // The `addFavorite` service function requires the movie and token
+      const newFavorite = await addFavorite(movie, currentUser.token);
+      setFavorites(prev => [...prev, newFavorite]);
+      toast.success(`${movie.title} added to favorites!`);
+    } catch (error) {
+      console.error("Failed to add favorite:", error);
+      toast.error("Failed to add favorite. Please try again.");
+    }
   };
 
-  // remove from favorites in DB
   const removeFromFavorites = async (movieId) => {
-    if (!token) return;
-    await removeFavorite(movieId, token);
-    setFavorites((prev) => prev.filter((m) => m.movieId !== movieId));
+    try {
+      await removeFavorite(movieId, currentUser.token);
+      setFavorites(prev => prev.filter(fav => fav.movieId !== movieId));
+      toast.info("Movie removed from favorites.");
+    } catch (error) {
+      console.error("Failed to remove favorite:", error);
+      toast.error("Failed to remove favorite. Please try again.");
+    }
   };
-
-  const isFavorite = (movieId) =>
-    favorites.some((movie) => movie.movieId === movieId);
+  
+  const isFavorite = (movieId) => {
+    return favorites.some(fav => fav.movieId === movieId);
+  };
 
   const providerValue = {
     favorites,
