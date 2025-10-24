@@ -28,8 +28,8 @@ function App() {
             {/* Protected routes */}
             <Route element={<ProtectedRoutes />}>
               {/* These routes are only accessible to logged-in users */}
-              <Route path="/" element={<Home />} />
               <Route path="/movie-app" element={<Home />} />
+              <Route path="/movie-app/home" element={<Home />} />
               <Route path="/movie-app/favorites" element={<Favorites />} />
               
             </Route>

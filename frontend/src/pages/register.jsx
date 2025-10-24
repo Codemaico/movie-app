@@ -72,7 +72,7 @@ function Register() {
         navigate("/movie-app/login");
       } else {
         toast.error("Registration successful, but no token received.");
-        navigate("/movie-app/login");
+        navigate("/movie-app/register");
       }
     } catch (error) {
       console.error("Network error:", error);
